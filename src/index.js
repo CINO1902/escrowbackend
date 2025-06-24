@@ -1,6 +1,5 @@
 require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
 const { connectDB } = require('./config/db');
 const errorHandler = require('./middleware/errorHandler');
 const swaggerUi = require('swagger-ui-express');
@@ -18,12 +17,14 @@ connectDB();
 // routes
 app.use('/api/auth', authRoutes);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerFile));
-app.route("/").get((req,res)=>{
-    res.json("hello world");
-    });
-    
+
+app.get('/', (_req, res) => {
+  res.json('hello world');
+});
+
 // error handler
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// **No app.listen() here!**
+// Just export the app for Vercel to wrap as a function:
+module.exports = app;
